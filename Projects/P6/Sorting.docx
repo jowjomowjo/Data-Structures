@@ -1,0 +1,112 @@
+1.  Identify ALL assumptions made in the following sample code  
+2.  Explain what the code does.
+3.  Trace the execution of this code on sample unsorted data sets 
+4.  Identify any errors or justify an impression that the code does delete correctly.  
+				 
+
+
+// recursive -- WHAT is the overhead of this version? 
+// MERGESORT – stable (move only when needed); EXTRA storage
+//	easy split, hard join
+void  mergeSort(int* a, int* b, int first, int last)				 
+{						 
+   if (first < last) 
+   {
+	int center = (first + last)/2;
+mergeSort(a, b, first, center); 
+mergeSort(a, b, center + 1, last); 
+	merge(a, b, first, center + 1, last);
+   }
+   return;
+}
+
+
+
+// iterative – 
+void  mergeSort(int* a, int size)				 
+{						 
+   int temp[size];	//extra space O(n)
+   int first, center, last;
+
+   for (int i = 1; i < size; i *= 2)	// i is size of sublist
+   {
+	first = 0;
+while ( first + i < size – 1)
+{
+center = first + i;
+		if (size < center + i – 1)	
+last = size;
+		else				
+last = center + i – 1;
+		merge(a, b, first, center, last);
+		first = last + 1;
+	}
+   }
+   return;
+}
+
+
+ 
+// recursive -- WHAT is the overhead of this version? 
+// QUICKSORT – rearrange so that small keys precede large keys
+//	hard split (choose pivot to partition list), easy join
+void  quickSort(int* a, int first, int last)				 
+{						 
+   if (first < last) 
+   {	int pivot = a[first];
+	int splitPoint = partition(a, pivot, first, last);
+a[splitPoint] = pivot;
+quickSort(a, first, splitPoint - 1); // a[splitPoint] in proper position
+quickSort(a, splitPoint + 1, last); 
+   }
+   return;
+}
+
+
+int moveRt(int* a, int pivot, int lo, int hi)			 
+{						 
+   int curr = hi;
+   int move = lo;
+ 
+   while (curr > move)
+   {
+if (a[curr] < pivot)	// too big for right partition
+{	a[lo] = a[curr];
+		move = curr;
+	}
+	curr--;
+   }
+   return move;
+}
+
+int moveLf(int* a, int pivot, int lo, int hi)			 
+{						 
+   int curr = lo;
+   int move = hi;
+ 
+   while (curr < move)
+   {
+if (a[curr] >= pivot)	// too small for left partition
+{	a[hi] = a[curr];
+		move = curr;
+	}
+	curr++;
+   }
+   return move;
+}
+
+
+int partition(int* a, int pivot, int first, int last)			 
+{						 
+   int high = last;
+   int low = first;
+ 
+   while (low < high)
+   {
+int highC = moveRt(a, pivot, low, high);	//candidate from high end
+low = moveLf(a, pivot, low + 1, highC);
+	high = highC - 1;
+   }
+   return low;
+}
+

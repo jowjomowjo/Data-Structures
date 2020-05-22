@@ -1,0 +1,89 @@
+1.  Identify ALL assumptions made in the following sample code  
+2.  Explain what the code does.
+3.  Trace the execution of this code on sample ‘disordered’ arrays
+4.  Identify any errors or justify an impression that the code does delete correctly.  
+				 
+// recursive perk∂own – percolateDown, aka heapifyDown
+void perc∂own(int* A, unsigned n, unsigned i)					 
+{						 
+   int	left = 2*i;				 
+   int	right = 2*i+1;	
+   int 	largest = i;
+
+   if (left < n  && A[left] > A[i])		largest = left;
+   if (right < n && A[right]>A[largest])	largest = right;
+					
+   if (largest != i) 
+   {	
+swap(A[i],A[largest]);	
+perc∂own(A,n,largest);
+   }	
+   return;
+}
+
+
+
+// iterative perc∂own – percolateDown, aka heapifyDown
+void perc∂own(int* A, unsigned n, unsigned i)					 
+{  
+   bool done = false;					 
+   while (!done && 2*i <= n)			 
+   {	
+      int	left = 2*i;				 
+   	int	right = 2*i+1;	
+int 	largest = i;
+
+   	if (A[left] > A[i])					largest = left;
+   	if ((right) <= n && A[right] > A[largest])	largest = right;
+   	if (largest != i) 
+   	{	
+swap(A[i],A[largest]);	
+i = largest;
+   	}
+	else done = true;	
+   }
+	
+   return;
+}
+
+ 
+// core functionality of delete 
+// NOTE – no need to pass A and n (count of numItems if class method)
+int local = A[1];
+swap(A[1], A[n]);
+n--;
+percDown(A, n, 1);
+
+
+
+
+// core functionality of insert
+n++;
+A[n] = x;
+int up = n;
+while (up > 1 && A[up] > A[up/2])
+{
+	swap(A[up], A[up/2];
+	up /= 2;
+}
+
+
+
+
+// build heap: rearrange array elements to form heap; HEAPIFY 
+for (int k = n/2; k>1; k--)
+	percDown(A, n, k);
+
+
+
+
+
+// Heapsort – in place O(nlogn) sort
+buildHeap(A);
+
+for (int k = n; k>2; k--)
+{
+	swap(A[1], A[k]);	// largest element to back of array
+	 			// reduce array examined in percDown
+	percDown(A, k-1, 1);
+}

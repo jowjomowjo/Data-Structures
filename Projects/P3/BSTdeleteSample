@@ -1,0 +1,49 @@
+1.  Identify ALL assumptions made in the following sample code  
+2.  Explain what the code does.
+3.  Trace the execution of this code on BSTs that represent key scenarios, that is deleting
+	a leaf node, a node with one child, a node with two children, the root of the BST
+4.  Identify any errors or justify an impression that the code does delete correctly.  
+
+// WHAT ASSUMPTIONS?				 
+void delNode(TNode*  parent, TNode*  delP)					 
+{						 
+   bool	left = (delP = = parent->left);				 
+
+   if (!delP->left && !delP->right) 		// leaf node
+   {  
+if (delP = = root)	root = 0;
+else if (left)		parent->left = 0;
+	else				parent->right = 0;
+   }					 
+   else if (!delP->right || !delP->left )		// one child
+   {  
+	TNode* child = (delP->left) ? delP->left :  delP->right;
+	if (delP = = root) 	root = child;
+else if (left)		parent->left = child;
+	else				parent->right = child;
+   }	
+   else  							// two children
+   {  
+TNode*	swapParent = maxLeft(delP);	// OR minRight
+// node found in maxLeft has no right child (else would not be max)
+//		parent of node to swap returned
+	 
+     	if ( swapP = = delP) // swap node is immediate left child of delP 
+	{	
+delP->value = delP->left->value;
+		delP->left = delP->left->left;
+		delP = swapParent->left;
+	}
+	else	// swap node is in right subtree of child of delP 
+	{	
+delP->value = swapParent->right->value;
+		delP = swapParent->right;
+		swapParent->right = delP->left;
+}
+   }						 
+   delete delP;
+
+   return;
+}
+
+// does this code work if deleting root node when root has 2 children?

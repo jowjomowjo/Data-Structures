@@ -1,0 +1,84 @@
+AVL (Adelson-Velsky and Landis) trees are self-balancing BSTs.  External interface to client is that of BST.  Internally, insert and delete must handle rotations to keep balance factor in range [-1,1] => insert, search, delete retain O(log n) worst case complexity.
+
+General approach – store height in node; insert as before, check balance factor on way back up tree (=> correct deepest out of balance node).  Four cases upon insertion:
+LeftLeft	inserted in left subtree of left child of X
+RightRight 	inserted in right subtree of right child of X
+LeftRight 	inserted in left subtree of right child of X
+RightLeft 	inserted in right subtree of left child of X
+  
+1.  Identify ALL assumptions made in the following sample code  
+2.  Explain what the code does.
+3.  Trace the execution of this code on AVLs that represent above rotational cases
+4.  Identify any errors or justify an impression that the code does delete correctly.  
+
+// balance factor = height(left subtree) – height(right subtree)		
+void rotateLL(AVLNode*&  r)					 
+{						 
+   AVLNode*	ptr = r->left;	//#1 - store left child address		
+
+   r->left = ptr->right;	//#2 – reset left link to right subtree
+ 
+   ptr->right = r;		//#3 – move up one level  			
+
+   r = ptr;				//#4 – reset passed link (parent->left)
+
+   return;
+}
+
+
+void rotateRR(AVLNode*&  r)					 
+{						 
+   AVLNode*	ptr = r->right;	//#1 - store right child address		
+
+   r->right = ptr->left;	//#2 – reset right link to left subtree
+ 
+   ptr->left = r;			//#3 – move up one level  			
+
+   r = ptr;				//#4 – reset passed link (parent->right)
+
+   return;
+}
+
+ 
+// DOUBLE rotations – first rotate lowest child, then rotate ancestor	
+void rotateLR(AVLNode*&  r)					 
+{						 
+   rotateRR(r->left);	//#1 – shift grandchild and child		
+
+   rotateLL(r);		//#2 – reduce one level
+
+   return;
+}
+
+
+void rotateRL(AVLNode*&  r)					 
+{						 
+   rotateLL(r->right);	//#1 – shift grandchild and child		
+
+   rotateRR(r);		//#2 – reduce one level
+
+   return;
+}
+
+
+// either retain height in node or compute subtree heights upon insert	
+void balance(AVLNode*&  r)					 
+{						 
+   int factor = subtrees(r);	//height(r->left) – height(r->right);		
+   if (factor > 1)		// left subtree off balance
+   {
+	if ( subtrees(r->left) > 0)	rotateLL(r);
+	else					rotateLR(r);
+   }	
+   else if (factor < -1)	// right subtree off balance
+   {
+	if ( subtrees(r->right) > 0)	rotateRL(r);
+	else					rotateRR(r);
+   }
+	
+   return;
+}
+
+
+// reduce level => balance += (1 – MIN(r->balance, 0));
+// rotate parent down => balance += ( 1 + MAX(parent->balance, 0));

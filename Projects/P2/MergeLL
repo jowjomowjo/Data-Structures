@@ -1,0 +1,63 @@
+1.  Identify ALL assumptions made in the following sample code  
+2.  Explain what the code does.
+3.  Trace the execution of this code on sample singly linked lists
+4.  Identify any errors or justify an impression that the code does delete correctly.  
+
+// recursive
+// WHAT is the overhead of this version? (RT stack storage?)
+Node*  mergeLL(Node* a, Node* b)					 
+{						 
+   if (!a) 	return b;
+   if (!b) 	return a;
+
+   Node*	mergeH = 0;
+   if (a->data < b->data)
+   {
+	mergeH = a;
+	mergeH->next = mergeLL(a->next, b);
+   }
+   else
+   {	
+mergeH = b;
+	mergeH->next = mergeLL(a, b->next);
+   }
+   return;
+}
+ 
+// iterative – trick is to track address of last Node merged (current)
+//	the last Node merged varies (from list a or list b)
+Node*  mergeLL(Node* a, Node* b)						 
+{  
+   if (!a) 	return b;
+   if (!b) 	return a;
+
+   Node*	aH = a;	
+   Node*	bH = b;
+   Node* 	head;
+   Node* 	current;	
+   if (a->data < b->data)	// pick off first element from a or b
+   {	head = current = a;
+	aH = aH->next;
+   }
+   else
+   {	head = current = b;
+	bH = bH->next;
+   }
+			 
+   while (aH && bH)		// only entered if both non-null lists	 
+   {	
+   	if (aH->data < bH->data)	
+   	{	current->next = aH;
+		current = aH;
+		aH = aH->next;
+   	}
+   	else				// at most one list becomes null in loop
+   	{	current->next = bH;
+		current = bH;
+		bH = bH->next;
+   	}		 
+   }
+   if (aH) 	current->next = aH;
+   if (bH) 	current->next = bH;
+   return 	head;
+}

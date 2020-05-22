@@ -1,0 +1,79 @@
+//Iterative BST traversal
+
+#include <stack>	// STL stack(s) used to simulate recursion
+
+// inorder  -- one stack used to simulate recursion
+TNode*  		current = root;					 
+stack<TNode*> 	s;				 
+
+while (!s.empty() || current)
+{	
+if (current)
+	{	
+s.push(current);
+current = current->left;
+}	
+   	else 
+   	{  
+if (!s.empty())	
+{
+	current = s.top();	s.pop();
+	process(current);
+current = current->right;
+}
+	}						 
+} // s empty and current null => tree traversed
+
+
+// preorder  -- one stack used to simulate recursion
+
+if (!root)	return;
+
+TNode*  	current;					 
+stack<TNode*> 	s;				 
+
+s.push(root);
+
+while (!s.empty())
+{	
+current = s.top();		s.pop();
+	process(current);
+if (current->right)	
+s.push(current->right);
+if (current->left)	
+s.push(current->left);
+						 
+}
+
+ 
+
+// postorder  -- two stacks used to simulate recursion
+
+if (!root)	return;
+
+TNode*  		current;					 
+stack<TNode*> 	s;	
+stack<TNode*> 	processD;				 
+
+s.push(root);
+
+while (!s.empty())
+{	
+current = s.top();		s.pop();
+processD.push(current);	//LIFO, process after subtrees
+ 
+if (current->left)	
+s.push(current->left);
+if (current->right)	
+s.push(current->right);
+						 
+}
+
+while (!processD.empty())
+{	
+current = processD.top();	s.pop();
+
+	process(current);
+
+}
+
